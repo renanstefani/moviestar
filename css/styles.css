@@ -92,6 +92,38 @@
     min-height: 65vh;
     padding: 40px;
 }
+/* -------- LOGIN / REGISTER -------- */
+#auth-row {
+    justify-content: space-evenly;
+}
+
+#login-container h2, 
+#register-container h2 {
+    width: 200px;
+    text-align: center;
+    border-bottom: 2px solid #F5C518;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+#login-container form, 
+#register-container form {
+    max-width: 400px;
+    margin: 30px auto;
+}
+
+.card-btn {
+    color: #000;
+    background-color: #F5C518;
+    border: 2px solid #F5C518;
+    width: 100%;
+}
+
+.card-btn:hover {
+    background-color: transparent;
+    color: #F5C518;
+    border-color: #F5C518;
+}
 
 /* ------------- FOOTER ------------- */
 #footer {
