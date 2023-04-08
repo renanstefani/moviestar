@@ -8,6 +8,8 @@
 
     $message = new Message($BASE_URL);
 
+    $userDao = new UserDAO($conn, $BASE_URL);
+
     // Resgata tipo de formulário
     $type = filter_input(INPUT_POST, "type");
     // (retorna o value do form com name "type" que criamos)
@@ -24,11 +26,50 @@
         // Verificação de dados mínimos
         if($name && $lastname && $email && $password) {
 
+            // Verificar se as senhas estão corretas
+            if($password === $confirmpassword) {
+
+                // Verificar se o e-mail já está cadastrado no sistema
+                if($userDao->findByEmail($email) === false) {
+                    
+                    // Caso o email não conste no sistema iniciamos o cadastro
+                    $user = new User();
+
+                    // Criação de token e senha
+                    $userToken = $user->generateToken();
+                    $finalPassword = $user->generatePassword($password);
+
+                    // Montando o objeto usuário com token e senha criados acima
+                    $user->name = $name;
+                    $user->lastname = $lastname;
+                    $user->email = $email;
+                    $user->password = $finalPassword;
+                    $user->token = $userToken;
+                    
+                    // Criando a conta e declarando autenticação (usuário criado e logado)
+                    $auth = true;
+
+                    $userDao->create($user, $auth);
+
+                } else {
+
+                    // Enviar mensagem de erro alertando que usuário já existe
+                    $message->setMessage("Usuário já cadastrado, utilize outro e-mail.", "error", "back");
+
+                }
+
+            } else {
+
+            // Enviar mensagem de erro alertando que as senhas digitadas são diferentes
+            $message->setMessage("As senhas não são iguais.", "error", "back");
+
+            }
+
         } else {
 
             // Enviar mensagem de erro alertando dados faltantes
             $message->setMessage("Por favor, preencha todos os campos.", "error", "back");
-
+            
         }
 
     } else if ($type === "login") {
