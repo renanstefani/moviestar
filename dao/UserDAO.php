@@ -59,6 +59,28 @@
 
         public function verifyToken($protected = false) {
 
+            if(!empty($_SESSION["token"])) {
+
+                // Resgata token da session
+                $token = $_SESSION["token"];
+
+                $user = $this->findByToken($token);
+
+                // Se for retornado um usuário com o token resgatado acima
+                if($user) {
+                    return $user;
+                } else if($protected) {
+
+                    // O usuário tentou fazer login mas o token não foi encontrado
+                    $this->message->setMessage("Faça a autenticação para acessar esta página!", "error", "index.php");
+                    
+                }
+                
+            } else if($protected) {
+                // Se não houver token na session, o usuário não está autenticado
+                $this->message->setMessage("Faça a autenticação para acessar esta página!", "error", "index.php");
+            }
+
         }
 
         public function setTokenToSession($token, $redirect = true) {
@@ -114,6 +136,40 @@
 
         public function findByToken($token) {
 
+            // Mesma lógica da func findByEmail
+            if($token != "") {
+
+                $stmt = $this->conn->prepare("SELECT * FROM users WHERE token = :token");
+
+                $stmt->bindParam(":token", $token);
+
+                $stmt->execute();
+
+                // Caso o stmt retorne uma row com o token declarado
+                if($stmt->rowCount() > 0) {
+
+                    $data = $stmt->fetch();
+                    $user = $this->buildUser($data);
+
+                    return $user;
+
+                } else {
+                    return false;
+                }
+
+            } else {
+                return false;
+            }
+            
+
+        }
+
+        public function destroyToken() {
+            // Remove o token da session
+            $_SESSION["token"] = "";
+
+            // Redirecionar usuário e mostrar mensagem de sucesso de logout
+            $this->message->setMessage("Você fez o logout!", "success", "index.php");
         }
 
         public function changePassword(User $user) {
