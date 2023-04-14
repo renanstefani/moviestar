@@ -53,7 +53,34 @@
 
         }
 
-        public function update(User $user) {
+        public function update(User $user, $redirect = true) {
+
+            $stmt = $this->conn->prepare("UPDATE users SET
+                name = :name, 
+                lastname = :lastname, 
+                email = :email, 
+                image = :image, 
+                bio = :bio, 
+                token = :token 
+                WHERE id = :id
+            ");
+
+            $stmt->bindParam(":name", $user->name);
+            $stmt->bindParam(":lastname", $user->lastname);
+            $stmt->bindParam(":email", $user->email);
+            $stmt->bindParam(":image", $user->image);
+            $stmt->bindParam(":bio", $user->bio);
+            $stmt->bindParam(":token", $user->token);
+            $stmt->bindParam(":id", $user->id);
+
+            $stmt->execute();
+
+            if($redirect) {
+
+                // Redireciona para o perfil do usuário
+                $this->message->setMessage("Dados atualizados com sucesso!", "success", "editprofile.php");
+
+            }
 
         }
 
@@ -98,6 +125,36 @@
         }
 
         public function authenticateUser($email, $password) {
+
+            // Verificando se há um usuário cadastrado com o email fornecido
+            $user = $this->findByEmail($email);
+
+            if($user) {
+
+                // Verificar se a senha fornecida está correta
+                if(password_verify($password, $user->password)) {
+
+                    // Gerar um token e inserir na session
+                    $token = $user->generateToken();
+                    
+                    $this->setTokenToSession($token, false);
+
+                    // Atualizar token no usuário, pois geramos um novo token acima
+                    $user->token = $token;
+
+                    $this->update($user, false);
+
+                    return true;
+
+                } else {
+                    // A senha está incorreta
+                    return false;
+                }
+
+            } else {
+                // O usuário não consta no banco
+                return false;
+            }
 
         }
 
