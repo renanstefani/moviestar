@@ -89,7 +89,7 @@
 #main-container {
     background-color: #000;
     color: #FFF;
-    min-height: 65vh;
+    min-height: 75vh;
     padding: 40px;
 }
 /* -------- LOGIN / REGISTER -------- */
@@ -123,6 +123,39 @@
     background-color: transparent;
     color: #F5C518;
     border-color: #F5C518;
+}
+/* ---------- EDIT PROFILE----------- */
+#profile-image-container {
+    width: 150px;
+    height: 150px;
+    margin: 15px auto;
+
+    border: 6px solid #F5C518;
+    border-radius: 100%;
+
+    background-size: cover;
+    background-position: center;
+}
+
+.page-description {
+    color: #999;
+}
+
+#bio {
+    max-width: 400px;
+}
+
+.form-control.disabled {
+    background-color: #BBB;
+    cursor: not-allowed;
+}
+
+#change-password-container {
+    margin-top: 30px;
+}
+
+.edit-profile-page .card-btn {
+    width: auto;
 }
 
 /* ------------- FOOTER ------------- */
