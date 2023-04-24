@@ -68,7 +68,7 @@
                 
             } else {
 
-                $message->setMessage("Tipo de imagem inválido, insira jpn ou png!", "error", "back");
+                $message->setMessage("Tipo de imagem inválido, insira jpg ou png!", "error", "back");
 
             }
         }
