@@ -1,5 +1,5 @@
 
-/* ------------- NAVBAR ------------- */
+/* --------------- NAVBAR --------------- */
 .navbar-brand {
     position: relative;
 }
@@ -85,14 +85,14 @@
     border-color: #BADBCC;
 }
 
-/* ------------- HOME ------------- */
+/* --------------- HOME --------------- */
 #main-container {
     background-color: #000;
     color: #FFF;
     min-height: 75vh;
     padding: 40px;
 }
-/* -------- LOGIN / REGISTER -------- */
+/* ------------- LOGIN / REGISTER ------------- */
 #auth-row {
     justify-content: space-evenly;
 }
@@ -124,7 +124,7 @@
     color: #F5C518;
     border-color: #F5C518;
 }
-/* ---------- EDIT PROFILE----------- */
+/* --------------- EDIT PROFILE --------------- */
 #profile-image-container {
     width: 150px;
     height: 150px;
@@ -158,7 +158,34 @@
     width: auto;
 }
 
-/* ------------- FOOTER ------------- */
+/* --------------- NEW MOVIE --------------- */
+.new-movie-container {
+    text-align: center;
+}
+
+#add-movie-form {
+    text-align: left;
+}
+
+.movie-image-container {
+    height: 400px;
+    min-width: 200px;
+    background-position: center;
+    background-size: cover;
+}
+
+.page-title::after {
+    content: "";
+    width: 300px;
+    
+    display: block;
+    margin: 0 auto;
+    padding-top: 7px;
+    border-bottom: 2px solid #F5C518;
+}
+
+
+/* ---------------- FOOTER ---------------- */
 #footer {
     margin: 0;
     padding: 20px;
