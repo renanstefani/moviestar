@@ -1,7 +1,7 @@
 <?php
     require_once("templates/header.php");
 
-    // Verificar se o usuário está autenticado
+    // Verificação de usuário
     require_once("models/User.php");
     require_once("dao/UserDAO.php");
 
@@ -46,8 +46,6 @@
                         <option value="Comédia">Comédia</option>
                         <option value="Fantasia">Fantasia</option>
                         <option value="Ficção">Ficção</option>
-                        <option value="Romance">Romance</option>
-                        <option value="Documentário">Documentário</option>
                     </select>
                 </div>
 

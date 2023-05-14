@@ -10,6 +10,7 @@
 
     $message = new Message($BASE_URL);
     $userDao = new UserDAO($conn, $BASE_URL);
+    $movieDao = new MovieDAO($conn, $BASE_URL);
 
     // Resgatar tipo de formulário
     $type = filter_input(INPUT_POST, "type");
@@ -36,6 +37,7 @@
             $movie->trailer = $trailer;
             $movie->category = $category;
             $movie->length = $length;
+            $movie->users_id = $userData->id;
 
             // Upload de imagem do filme
             if(isset($_FILES["image"]) && !empty($_FILES["image"]["tmp_name"])) {
@@ -44,7 +46,7 @@
                 $imageTypes = ["image/jpeg", "image/jpg", "image/png"];
                 $jpgArray = ["image/jpeg", "image/jpg"];
 
-                // Checando tipo da img
+                // Checando se o tipo da imagem é um dos tipos/formatos especificados no array
                 if(in_array($image["type"], $imageTypes)) {
 
                     // Caso seja jpg ou jpeg
@@ -56,13 +58,25 @@
                         $imageFile = imagecreatefrompng($image["tmp_name"]);
                     }
 
+                    // Gerando nome da imagem
+                    $imageName = $movie->imageGenerateName();
+
+                    // Salvando a imagem (imagem criada, diretório, qualidade)
+                    imagejpeg($imageFile, "./img/movies/" . $imageName, 100);
+
+                    $movie->image = $imageName;
+
 
                 } else {
                     
                     $message->setMessage("Tipo de imagem inválido, insira jpg ou png!", "error", "back");
                 
                 }
+
             }
+            
+            // Inserimos o filme no banco após as verificações
+            $movieDao->create($movie);
 
         } else {
 
