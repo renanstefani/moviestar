@@ -108,8 +108,85 @@
         }
 
 
+    } else if($type === "update"){
+
+        // Receber dados dos inputs
+        $title = filter_input(INPUT_POST, "title");
+        $description = filter_input(INPUT_POST, "description");
+        $trailer = filter_input(INPUT_POST, "trailer");
+        $category = filter_input(INPUT_POST, "category");
+        $length = filter_input(INPUT_POST, "length");
+        $id = filter_input(INPUT_POST, "id");
+
+        $movieData = $movieDao->findById($id);
+
+        // Verificar se encontrou o filme
+        if ($movieData) {
+
+            // Verificar se o filme é do usuário
+            if($movieData->users_id === $userData->id) {
+
+                // Validação mínima de dados
+                if(!empty($title) && !empty($description) && !empty($category)) {
+
+                    // Edição do filme
+                    $movieData->title = $title;
+                    $movieData->description = $description;
+                    $movieData->trailer = $trailer;
+                    $movieData->category = $category;
+                    $movieData->length = $length;
+
+                    // Upload de imagem do filme
+                    if(isset($_FILES["image"]) && !empty($_FILES["image"]["tmp_name"])) {
+
+                        $image = $_FILES["image"];
+                        $imageTypes = ["image/jpeg", "image/jpg", "image/png"];
+                        $jpgArray = ["image/jpeg", "image/jpg"];
+
+                        // Checando se o tipo da imagem é um dos tipos/formatos especificados no array
+                        if(in_array($image["type"], $imageTypes)) {
+
+                            // Caso seja jpg ou jpeg
+                            if(in_array($image["type"], $jpgArray)) {
+                                $imageFile = imagecreatefromjpeg($image["tmp_name"]);
+
+                            // Caso seja png
+                            } else {
+                                $imageFile = imagecreatefrompng($image["tmp_name"]);
+                            }
+
+                            // Gerando nome da imagem
+                            $movie = new Movie();
+                            
+                            $imageName = $movie->imageGenerateName();
+
+                            // Salvando a imagem (imagem criada, diretório, qualidade)
+                            imagejpeg($imageFile, "./img/movies/" . $imageName, 100);
+
+                            $movie->image = $imageName;
+
+                        } else {
+                        
+                        $message->setMessage("Tipo de imagem inválido, insira jpg ou png!", "error", "back");
+                    
+                        }
+
+                    }
+
+                    $movieDao->update($movieData);
+
+                } else {
+                    $message->setMessage("Preencha pelo menos os seguintes campos: título, descrição e categoria.", "error", "back");
+                }
+
+            } else {
+                $message->setMessage("Informações inválidas", "error", "index.php");
+            }
+
+        } else {
+            $message->setMessage("Informações inválidas", "error", "index.php");
+        }
+
     } else {
-
         $message->setMessage("Informações inválidas", "error", "index.php");
-
     }
