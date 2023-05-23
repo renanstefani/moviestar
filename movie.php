@@ -53,7 +53,7 @@
 
 <div id="main-container" class="container-fluid">
     <div class="row">
-        <div class="offset-md-1 col-md-6 movie-container">
+        <div class="offset-md-1 col-md-8 movie-container">
             <h1 class="page-title"><?= $movie->title ?></h1>
 
             <p class="movie-details">
@@ -69,7 +69,7 @@
             <p><?= $movie->description ?></p>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-2">
             <div class="movie-image-container" style="background-image: url('<?= $BASE_URL ?>/img/movies/<?= $movie->image ?>');"></div>
         </div>
 
