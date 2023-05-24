@@ -1,9 +1,9 @@
 <?php
     require_once("templates/header.php");
 
-    // Verificação de usuário
     require_once("models/Movie.php");
     require_once("dao/MovieDAO.php");
+    require_once("dao/ReviewDAO.php");
 
     // Resgatar id do filme
     $id = filter_input(INPUT_GET, "id");
@@ -11,6 +11,8 @@
     $movie;
 
     $movieDao = new MovieDAO($conn, $BASE_URL);
+
+    $reviewDao = new ReviewDAO($conn, $BASE_URL);
     
     if(empty($id)) {
 
@@ -45,9 +47,13 @@
             $userOwnsMovie = true;
         }
 
+        // O usuário já criou uma crítica para o filme
+        $alreadyReviewed = $reviewDao->hasAlreadyReviewed($id, $userData->id);
+
     }
 
     // Resgatar reviews do filme
+    $movieReviews = $reviewDao->getMoviesReview($id);
 
 ?>
 
@@ -61,7 +67,7 @@
                 <span class="pipe"></span>
                 <span><?= $movie->category ?></span>
                 <span class="pipe"></span>
-                <span><i class="fas fa-star"></i> 9</span>
+                <span><i class="fas fa-star"></i> <?= $movie->rating ?></span>
             </p>
 
             <iframe src="<?= $movie->trailer ?>" width="560" height="315" frameborder="0" allow="accelerometer; autoplay; clipboard-white; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -118,26 +124,15 @@
             <?php endif; ?>
 
             <!-- Comentários -->
-            <div class="col-md-12 review">
-                <div class="row">
-                    <div class="col-md-1">
-                        <div class="profile-image-container review-image" style="background-image: url('img/users/user.png');"></div>
-                    </div>
+            <?php foreach($movieReviews as $review): ?>
+                <?php require("templates/user_review.php"); ?>
+            <?php endforeach; ?>
 
-                    <div class="col-md-9 author-details-container">
-                        <h4 class="author-name">
-                            <a href="#">Renan teste</a>
-                        </h4>
+            <?php if(count($movieReviews) == 0): ?>
+                <p class="empty-list">Esse filme ainda não possui comentários...</p>
+            <?php endif; ?>
 
-                        <p><i class="fas fa-star"></i>9</p>
-                    </div>
-
-                    <div class="col-md-12">
-                        <p class="comment-title">Comentário:</p>
-                        <p>Este é o comentário do usuário</p>
-                    </div>
-                </div>
-            </div>
+            
 
         </div>
     </div>
